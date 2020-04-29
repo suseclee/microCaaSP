@@ -1,0 +1,20 @@
+<network>
+  <name>microCaaSP-network</name>
+  <uuid>b3838f24-9232-4a42-a307-47012935229c</uuid>
+  <forward mode='nat'>
+    <nat>
+      <port start='1024' end='65535'/>
+    </nat>
+  </forward>
+  <bridge name='microCaaSP' stp='on' delay='0'/>
+  <mac address='52:54:00:b5:4b:4d'/>
+  <domain name='microCaaSP.local'/>
+  <dns enable='yes'/>
+  <ip family='ipv4' address='192.168.0.1' prefix='22'>
+    <dhcp>
+      <range start='192.168.0.2' end='192.168.3.254'/>
+      <host mac='52:54:00:9e:1d:ed' name='microCaaSP' ip='192.168.2.0'/>
+    </dhcp>
+  </ip>
+</network>
+
