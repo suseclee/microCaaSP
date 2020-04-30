@@ -8,7 +8,7 @@ RM = rm
 
 
 .PHONY: all
-all: build
+all: install
 
 .PHONY: install
 install:
