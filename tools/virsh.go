@@ -29,7 +29,7 @@ func ActivateNetwork(networkFilePath string, networkName string) {
 func InstallDomain(imagePath string) {
 	debug := constants.DEBUGMODE
 	virshCmd := []string{"virt-install", "--connect", "qemu:///system",
-		"--virt-type", "kvm", "--name", "microCaaSP", "--ram", "4056", "--vcpus=4",
+		"--virt-type", "kvm", "--name", "microCaaSP", "--ram", "4096", "--vcpus=4",
 		"--os-type", "linux", "--os-variant", "sle15", "--disk", "path=" + imagePath + ",format=qcow2",
 		"--import", "--network", "network=microCaaSP-network,mac=52:54:00:9e:1d:ed", "--noautoconsole"}
 
