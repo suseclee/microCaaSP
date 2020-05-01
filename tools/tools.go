@@ -5,18 +5,16 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"strings"
 )
 
 func Shell(cmds []string) error {
 	// https://golang.org/src/os/exec/example_test.go
-	fmt.Printf("%s\n", strings.Join(cmds, " "))
 	cmd := exec.Command(cmds[0], cmds[1:]...)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%s\n", string(out))
+	fmt.Printf("%s", string(out))
 	return nil
 }
 

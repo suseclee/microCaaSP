@@ -42,7 +42,6 @@ func (m *MicroCaaSP) Deploy() {
 	}
 
 	tools.ActivateNetwork(path.Join(m.tempDir, m.files[0]), constants.VIRSHNETWORK)
-
 	tools.InstallDomain(path.Join(m.tempDir, m.files[1]))
 }
 
@@ -51,13 +50,10 @@ func (m *MicroCaaSP) Login() {
 }
 
 func (m *MicroCaaSP) Destroy() {
-	//m.Init()
-
 	tools.TerminateDomain(constants.VIRSHDOMAIN)
 	tools.TerminateNetwork(constants.VIRSHNETWORK)
 	tools.TerminatePool(constants.VIRSHPOOL)
 
-	cleanTempDir := []string{"rm", "-r", m.tempDir}
+	cleanTempDir := []string{"rm", "-r", constants.GetTempDir()}
 	tools.Shell(cleanTempDir)
-
 }
