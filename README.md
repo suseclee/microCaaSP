@@ -11,15 +11,17 @@ If you done using the microCaaSP, you can simple destroy by `microCaaSP destroy`
 
 
 # Prerequisite
-### 1. kvm related tools
+### 1. VPN to SUSE
+In order for microCaaSP to download image adn xml files, you need to connect to SUSE VPN
+
+### 2. kvm related tools
 These are good packages for kvm virtualization
 ```
 sudo zypper in  qemu-kvm guestfs-tools libvirt libvirt-daemon-qemu virt-manager bridge-utils
 sudo systemctl start libvirtd  && sudo systemctl enable libvirtd
 sudo usermod -aG libvirt,kvm $USER
 ```
-
-### 2. Go
+### 3. Go
 A user needs to install GO
 
 # Build/Install

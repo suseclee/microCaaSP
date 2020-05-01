@@ -9,7 +9,6 @@ import (
 	"log"
 	"os"
 	"path"
-	"path/filepath"
 )
 
 // microCaaSP constants
@@ -18,10 +17,11 @@ const (
 	USERNAME     = "sles"
 	URL          = "http://10.84.128.39/repo/SUSE/Images/microCaaSP/"
 	PASSPHRASE   = "suse"
-	PASSWORDFILE = "/configs/constants/.passwd"
+	PASSWORDFILE = ".passwd"
 	VIRSHNETWORK = "microCaaSP-network"
 	VIRSHDOMAIN  = "microCaaSP"
 	VIRSHPOOL    = "microCaaSP"
+	DEBUGMODE    = true
 )
 
 func GetTempDir() string {
@@ -34,11 +34,11 @@ func GetBackupDir() string {
 
 func GetDownloadFiles() []string {
 	//[0] must be networkFileName
-	return []string{"microCaaSP.xml", "microCaaSP.qcow2"}
+	return []string{"microCaaSP.xml", "microCaaSP.qcow2", ".passwd"}
 }
 
 func GetPassword() string {
-	return string(decryptFile(PASSWORDFILE, PASSPHRASE))
+	return string(decryptFile(path.Join(GetTempDir(), PASSWORDFILE), PASSPHRASE))
 }
 
 func createHash(key string) string {
@@ -67,12 +67,7 @@ func decrypt(data []byte, passphrase string) []byte {
 }
 
 func decryptFile(filename string, passphrase string) []byte {
-	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	data, err := ioutil.ReadFile(path.Join(dir, filename))
+	data, err := ioutil.ReadFile(filename)
 	if err != nil {
 		log.Fatal(err)
 
