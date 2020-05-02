@@ -1,7 +1,9 @@
 package microCaaSP
 
 import (
+	"fmt"
 	"log"
+	"os"
 	"path"
 
 	"github.com/suseclee/microCaaSP/configs/constants"
@@ -37,6 +39,7 @@ func (m *MicroCaaSP) Deploy() {
 	tools.TerminateNetwork(constants.VIRSHNETWORK)
 	tools.ActivateNetwork(path.Join(m.tempDir, m.files[0]), constants.VIRSHNETWORK)
 	tools.InstallDomain(path.Join(m.tempDir, m.files[1]))
+	fmt.Println("`microCaaSP login` will be ready in less than 10 seconds")
 }
 
 func (m *MicroCaaSP) Login() {
@@ -51,6 +54,9 @@ func (m *MicroCaaSP) Destroy() {
 	tools.TerminateNetwork(constants.VIRSHNETWORK)
 	tools.TerminatePool(constants.VIRSHPOOL)
 
-	cleanTempDir := []string{"rm", "-r", constants.GetTempDir()}
-	tools.Shell(cleanTempDir, constants.DEBUGMODE)
+	if _, err := os.Stat(constants.GetTempDir()); os.IsExist(err) {
+		cleanTempDir := []string{"rm", "-r", constants.GetTempDir()}
+		tools.Shell(cleanTempDir, constants.DEBUGMODE)
+	}
+	fmt.Println("microCaaSP is destroyed successfully")
 }
