@@ -22,20 +22,35 @@ sudo systemctl start libvirtd  && sudo systemctl enable libvirtd
 sudo usermod -aG libvirt,kvm $USER
 ```
 
-### 3. Go
+### 3. Go (for building/installing)
 Users need to install GO
 
-# Build/Install
+# Build/Install microCaaSP
+You can download microCaasP binary from the release tap instead of building/installing microCaaSP. 
+This insruction shows how to build and install microCaaSP instead of downloading microCaaSP binary.
+For building microCaaSP, create a folder under ~/go/source path and clone the repo.
+### 1. download source files
 ```
 go get git@github.com:suseclee/microCaaSP.git
 cd ~/go/src/github.com/suseclee/microCaaSP
+```
+##### or
+```
+mkdir -p ~/go/src/github.com/suseclee
+git clone git@github.com:suseclee/microCaaSP.git
+cd microCaaSP
+```
+### 2. create microCaaSP binary
+The microCaaSP binary will be available in GO bin path.
+```
 make
 ```
-Now the microCaaSP binary will be available in GO path.
-The alternative will be:
+##### or
+The microCaaSP binary will be avialble in the project root folder.
 ```
-make build will generate microCaaSP binary in the project root folder.
+make build
 ```
+
 
 # Usage
 ```
