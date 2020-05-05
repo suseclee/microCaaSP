@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 
+	"github.com/gookit/color"
 	"github.com/suseclee/microCaaSP/configs/constants"
 	"github.com/suseclee/microCaaSP/tools"
 )
@@ -39,7 +40,13 @@ func (m *MicroCaaSP) Deploy() {
 	tools.TerminateNetwork(constants.VIRSHNETWORK)
 	tools.ActivateNetwork(path.Join(m.tempDir, m.files[0]), constants.VIRSHNETWORK)
 	tools.InstallDomain(path.Join(m.tempDir, m.files[1]))
-	fmt.Println("`microCaaSP login` will be ready in less than 10 seconds")
+	fmt.Println("microCaaSP is booting ...")
+	err := tools.WaitForLogin()
+	if err != nil {
+		fmt.Printf("\n%s\n", err)
+	} else {
+		fmt.Printf("\nNow ready for %s\n", color.FgGreen.Render("microCaaSP login"))
+	}
 }
 
 func (m *MicroCaaSP) Login() {

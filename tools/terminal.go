@@ -2,10 +2,12 @@ package tools
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 
@@ -49,6 +51,40 @@ func Terminal() {
 		cancel()
 	case <-ctx.Done():
 	}
+}
+
+func WaitForLogin() error {
+	waitTimes := []int{7, 4, 4, 2}
+	waitTime := 0
+	for _, duration := range waitTimes {
+		ShellSpin([]string{"sleep", strconv.Itoa(duration)})
+		waitTime += duration
+		if err := Ping(); err == nil {
+			return nil
+		}
+	}
+	return errors.Unwrap(fmt.Errorf("Could not boot within %d secs", waitTime))
+}
+
+func Ping() error {
+	n := &Node{}
+	n.Init()
+
+	config := &ssh.ClientConfig{
+		User: n.user,
+		Auth: []ssh.AuthMethod{
+			ssh.Password(n.password),
+		},
+		Timeout:         5 * time.Second,
+		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+	}
+	hostport := fmt.Sprintf("%s:%s", n.host, n.port)
+	conn, err := ssh.Dial("tcp", hostport, config)
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+	return nil
 }
 
 func (n *Node) run(ctx context.Context) error {
