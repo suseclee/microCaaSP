@@ -37,6 +37,7 @@ func InstallDomain(imagePath string) {
 		log.Fatal(err)
 	}
 }
+
 func TerminateDomain(domain string) {
 	conn := GetConnection()
 	if domain, errp := conn.LookupDomainByName(constants.VIRSHDOMAIN); errp == nil {

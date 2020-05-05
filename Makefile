@@ -18,11 +18,6 @@ install:
 build:
 	$(GO) build ./cmd/...
 
-.PHONY: install
-install:
-	$(GO) install ./cmd/...
-
-
 .PHONY: clean
 clean:
 	$(GO) clean -i ./...
