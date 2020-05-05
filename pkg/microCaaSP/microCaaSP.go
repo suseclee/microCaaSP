@@ -53,10 +53,11 @@ func (m *MicroCaaSP) Destroy() {
 	tools.TerminateDomain(constants.VIRSHDOMAIN)
 	tools.TerminateNetwork(constants.VIRSHNETWORK)
 	tools.TerminatePool(constants.VIRSHPOOL)
-
-	if _, err := os.Stat(constants.GetTempDir()); os.IsExist(err) {
+	if _, err := os.Stat(constants.GetTempDir()); !os.IsNotExist(err) {
 		cleanTempDir := []string{"rm", "-r", constants.GetTempDir()}
-		tools.Shell(cleanTempDir, constants.DEBUGMODE)
+		if err := tools.Shell(cleanTempDir, constants.DEBUGMODE); err != nil {
+			log.Fatalf("Error on cleaning up %s", constants.GetTempDir())
+		}
 	}
 	fmt.Println("microCaaSP is destroyed successfully")
 }
