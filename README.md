@@ -23,9 +23,10 @@ sudo usermod -aG libvirt,kvm $USER
 ```
 
 ### 3. Go (for building/installing)
-Users need to install GO
+Users need to install GO for building microCaaSP.   
+Alternatively, users can download microCaaSP from https://github.com/suseclee/microCaaSP/releases
 
-# Build/Install microCaaSP
+# Build/Install microCaaSP by yourself
 You can download microCaasP binary from the release tap instead of building/installing microCaaSP. 
 This insruction shows how to build and install microCaaSP instead of downloading microCaaSP binary.
 For building microCaaSP, create a folder under ~/go/source path and clone the repo.
@@ -50,7 +51,13 @@ The microCaaSP binary will be avialble in the project root folder.
 ```
 make build
 ```
+# Guide
+When you use `microCaaSP deploy` for the first time, `microCaaSP deploy` will download a qcow2 image. The first download will take about 10 min depending on your network condition. Once the image is downloaded from the first deployment, microCaaSP caches the image so that you do not need to download the image from the second deployment. The Server, in which qcow2 image is stored, is a part of Y squad Baremetals in Provo, UT, USA. 
 
+After the deployment, you are ready to login the VM by `microCaaSP login`. If you login microCaasp, kubectl is ready to use. 
+Try `kubectl get pod -A` after login, some system containers would be still in "ContainerCreating" states. The microCaaSP is a stripped down version of SUSE CaaS Platform 4. If you want to know more about an enterprise class container management solution, go to https://www.suse.com/products/caas-platform/. The microCaaSP has also built-in clsuter-API. Therefore, you are ready to deploy the kubernetes cluster in any platform that cluster-api provides. To know more about cluster-api, https://cluster-api.sigs.k8s.io/ is a good site to start. After you are done using microCaaSP, type `exit`. This will lead to exit microCaaSP terminal. Whenever you want to use microCaaSP again, `microCaaSP login` will lead you to access microCaaSP where you left from.
+
+After you are done using microCaaSP, `microCaaSP destroy` deletes the image that you are currently working on. So next time you deploy microCaaSP, the microCaaSP will be initiated from the new image.
 
 # Usage
 ```
