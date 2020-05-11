@@ -7,7 +7,7 @@ Therefore, in order to use the microCaaSP, you should be connected via SUSE vpn.
 After you deploy the microCaaSP, within a mintute the node and Kubernetes in the node are ready to use by`microCaaSP login`. The microCaaSP includes the clusterctl binary. By `clusterctl init`, users will be also ready to deploy full spec of Kubernetes in any platform that cluster-api supports.
 More information about cluster-API is shown https://github.com/kubernetes-sigs/cluster-api. Now you are ready to deploy full stack of Kuberntes any of platforms.  
 
-If you done using the microCaaSP, you can simple destroy by `microCaaSP destroy`
+If you are done using the microCaaSP, you can simple destroy by `microCaaSP destroy`
 
 
 # Prerequisite
