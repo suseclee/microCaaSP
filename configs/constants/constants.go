@@ -13,7 +13,6 @@ import (
 
 // microCaaSP constants
 const (
-	NODEIP       = "192.168.2.0"
 	USERNAME     = "sles"
 	URL          = "http://10.84.128.39/repo/SUSE/Images/microCaaSP/"
 	PASSPHRASE   = "suse"

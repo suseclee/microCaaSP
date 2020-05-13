@@ -40,6 +40,10 @@ func (m *MicroCaaSP) Deploy() {
 	tools.TerminateNetwork(constants.VIRSHNETWORK)
 	tools.ActivateNetwork(path.Join(m.tempDir, m.files[0]), constants.VIRSHNETWORK)
 	tools.InstallDomain(path.Join(m.tempDir, m.files[1]))
+
+	fmt.Println("Getting microCaaSP IP ...")
+	tools.WaitForMicroCaaSPNetworkReady()
+
 	fmt.Println("microCaaSP is booting ...")
 	err := tools.WaitForLogin()
 	if err != nil {
@@ -51,7 +55,7 @@ func (m *MicroCaaSP) Deploy() {
 
 func (m *MicroCaaSP) Login() {
 	if !tools.MicroCaaSPDomainExist() {
-		log.Fatalf("%s is not deployed. Deploy first and login", constants.VIRSHDOMAIN)
+		log.Fatalf("Domain %s is not deployed. \nUse %s first", color.FgRed.Render(constants.VIRSHDOMAIN), color.FgGreen.Render("microCaaSP deploy"))
 	}
 	tools.Terminal()
 }

@@ -1,7 +1,9 @@
 package tools
 
 import (
+	"fmt"
 	"log"
+	"strconv"
 
 	"github.com/libvirt/libvirt-go"
 	"github.com/suseclee/microCaaSP/configs/constants"
@@ -31,7 +33,7 @@ func InstallDomain(imagePath string) {
 	virshCmd := []string{"virt-install", "--connect", "qemu:///system",
 		"--virt-type", "kvm", "--name", "microCaaSP", "--ram", "4096", "--vcpus=4",
 		"--os-type", "linux", "--os-variant", "sle15", "--disk", "path=" + imagePath + ",format=qcow2",
-		"--import", "--network", "network=microCaaSP-network,mac=52:54:00:9e:1d:ed", "--noautoconsole"}
+		"--import", "--network", "network=" + constants.VIRSHNETWORK, "--noautoconsole"}
 
 	if err := Shell(virshCmd, debug); err != nil {
 		log.Fatal(err)
@@ -93,12 +95,22 @@ func MicroCaaSPDomainExist() bool {
 	return false
 }
 
+func GetMicroCaaSPDomain() (*libvirt.Domain, error) {
+	conn := GetConnection()
+	return conn.LookupDomainByName(constants.VIRSHDOMAIN)
+}
+
 func MicroCaaSPNetworkExist() bool {
 	conn := GetConnection()
-	if _, err := conn.LookupNetworkByName(constants.VIRSHDOMAIN); err == nil {
+	if _, err := conn.LookupNetworkByName(constants.VIRSHNETWORK); err == nil {
 		return true
 	}
 	return false
+}
+
+func GetMicroCaaSPNetwork() (*libvirt.Network, error) {
+	conn := GetConnection()
+	return conn.LookupNetworkByName(constants.VIRSHNETWORK)
 }
 
 func MicroCaaSPStoragePoolExist() bool {
@@ -107,4 +119,40 @@ func MicroCaaSPStoragePoolExist() bool {
 		return true
 	}
 	return false
+}
+
+func WaitForMicroCaaSPNetworkReady() error {
+	net, err := GetMicroCaaSPNetwork()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for i := 0; i < 20; i++ {
+		leases, _ := net.GetDHCPLeases()
+		if leases != nil && len(leases) > 0 {
+			return nil
+		}
+		ShellSpin([]string{"sleep", strconv.Itoa(2)})
+	}
+	return fmt.Errorf("Error: Network is not ready")
+}
+
+func GetIP() (string, error) {
+	net, err := GetMicroCaaSPNetwork()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := WaitForMicroCaaSPNetworkReady(); err != nil {
+		log.Fatal(err)
+	}
+
+	networkDHCPLeases, err := net.GetDHCPLeases()
+	for _, lease := range networkDHCPLeases {
+		if lease.IPaddr != "" {
+			return lease.IPaddr, nil
+		}
+	}
+	return "", fmt.Errorf("Error for getting IP")
+
 }

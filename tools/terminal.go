@@ -28,7 +28,11 @@ func (n *Node) Init() {
 	n.user = constants.USERNAME
 	n.password = constants.GetPassword()
 	n.port = "22"
-	n.host = constants.NODEIP
+	var err error
+	n.host, err = GetIP()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 //https://gist.github.com/atotto/ba19155295d95c8d75881e145c751372

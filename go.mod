@@ -6,6 +6,7 @@ require (
 	github.com/briandowns/spinner v1.11.0
 	github.com/gookit/color v1.2.5
 	github.com/libvirt/libvirt-go v6.1.0+incompatible
+	github.com/libvirt/libvirt-go-xml v6.3.0+incompatible
 	github.com/mattn/go-isatty v0.0.12
 	github.com/sparrc/go-ping v0.0.0-20190613174326-4e5b6552494c
 	github.com/spf13/cobra v1.0.0
