@@ -20,7 +20,6 @@ These are essential and related packages for kvm virtualization
 sudo zypper in  qemu-kvm guestfs-tools libvirt libvirt-daemon-qemu virt-manager bridge-utils
 sudo systemctl start libvirtd  && sudo systemctl enable libvirtd
 sudo usermod -aG libvirt,kvm $USER
-
 ```
 
 ### 3. Go (for building/installing)
