@@ -33,9 +33,10 @@ func InstallDomain(imagePath string) {
 	virshCmd := []string{"virt-install", "--connect", "qemu:///system",
 		"--virt-type", "kvm", "--name", "microCaaSP", "--ram", "4096", "--vcpus=4",
 		"--os-type", "linux", "--os-variant", "sle15", "--disk", "path=" + imagePath + ",format=qcow2",
-		"--import", "--network", "network=" + constants.VIRSHNETWORK, "--noautoconsole"}
+		"--import", "--network", "network=" + constants.VIRSHNETWORK + ",mac=52:54:00:9e:1d:ed", "--noautoconsole"}
 
 	if err := Shell(virshCmd, debug); err != nil {
+
 		log.Fatal(err)
 	}
 }
