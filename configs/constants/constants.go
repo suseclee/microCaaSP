@@ -13,14 +13,16 @@ import (
 
 // microCaaSP constants
 const (
-	USERNAME     = "sles"
-	URL          = "http://10.84.128.39/repo/SUSE/Images/microCaaSP/"
-	PASSPHRASE   = "suse"
-	PASSWORDFILE = ".passwd"
-	VIRSHNETWORK = "microCaaSP-network"
-	VIRSHDOMAIN  = "microCaaSP"
-	VIRSHPOOL    = "microCaaSP"
-	DEBUGMODE    = true
+	USERNAME        = "sles"
+	URL             = "http://10.84.128.39/repo/SUSE/Images/microCaaSP/"
+	PASSPHRASE      = "suse"
+	PASSWORDFILE    = ".passwd"
+	VIRSHNETWORK    = "microCaaSP-network"
+	VIRSHDOMAIN     = "microCaaSP"
+	VIRSHPOOL       = "microCaaSP"
+	NETWORKFILENAME = "microCaaSP.xml"
+	IMAGEFILENMAE   = "microCaaSP.qcow2"
+	DEBUGMODE       = true
 )
 
 func GetTempDir() string {
@@ -33,11 +35,15 @@ func GetBackupDir() string {
 
 func GetDownloadFiles() []string {
 	//[0] must be networkFileName
-	return []string{"microCaaSP.xml", "microCaaSP.qcow2", ".passwd"}
+	return []string{NETWORKFILENAME, IMAGEFILENMAE, PASSWORDFILE}
 }
 
 func GetPassword() string {
 	return string(decryptFile(path.Join(GetTempDir(), PASSWORDFILE), PASSPHRASE))
+}
+
+func GetNetworkXMLPath() string {
+	return path.Join(GetTempDir(), NETWORKFILENAME)
 }
 
 func createHash(key string) string {

@@ -1,11 +1,15 @@
 package tools
 
 import (
+	"encoding/xml"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
 	"strconv"
 
 	"github.com/libvirt/libvirt-go"
+	libvirtxml "github.com/libvirt/libvirt-go-xml"
 	"github.com/suseclee/microCaaSP/configs/constants"
 )
 
@@ -28,15 +32,33 @@ func ActivateNetwork(networkFilePath string, networkName string) {
 	}
 }
 
+func GetMacAddress() string {
+	xmlFile, err := os.Open(constants.GetNetworkXMLPath())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("Successfully Opened %s \n", constants.GetNetworkXMLPath())
+	defer xmlFile.Close()
+
+	byteValue, _ := ioutil.ReadAll(xmlFile)
+	domcfg := &libvirtxml.Network{}
+	err = xml.Unmarshal(byteValue, domcfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return domcfg.IPs[0].DHCP.Hosts[0].MAC
+}
+
 func InstallDomain(imagePath string) {
 	debug := constants.DEBUGMODE
 	virshCmd := []string{"virt-install", "--connect", "qemu:///system",
 		"--virt-type", "kvm", "--name", "microCaaSP", "--ram", "4096", "--vcpus=4",
 		"--os-type", "linux", "--os-variant", "sle15", "--disk", "path=" + imagePath + ",format=qcow2",
-		"--import", "--network", "network=" + constants.VIRSHNETWORK + ",mac=52:54:00:9e:1d:ed", "--noautoconsole"}
+		"--import", "--network", "network=" + constants.VIRSHNETWORK + ",mac=" + GetMacAddress(), "--noautoconsole"}
 
 	if err := Shell(virshCmd, debug); err != nil {
-
+		log.Printf("Err on '%s'", virshCmd)
 		log.Fatal(err)
 	}
 }
