@@ -16,11 +16,11 @@ import (
 func ActivateNetwork(networkFilePath string, networkName string) {
 	debug := constants.DEBUGMODE
 	virshCmd := []string{"virsh", "net-define", networkFilePath}
-	if err := Shell(virshCmd, debug); err != nil {
+	if _, err := Shell(virshCmd, debug); err != nil {
 		log.Fatal(err)
 	}
 	virshCmd = []string{"virsh", "net-start", networkName}
-	if err := Shell(virshCmd, debug); err != nil {
+	if _, err := Shell(virshCmd, debug); err != nil {
 		log.Fatal(err)
 	}
 
@@ -57,10 +57,12 @@ func InstallDomain(imagePath string) {
 		"--os-type", "linux", "--os-variant", "sle15", "--disk", "path=" + imagePath + ",format=qcow2",
 		"--import", "--network", "network=" + constants.VIRSHNETWORK + ",mac=" + GetMacAddress(), "--noautoconsole"}
 
-	if err := Shell(virshCmd, debug); err != nil {
+	out, err := Shell(virshCmd, debug)
+	if err != nil {
 		log.Printf("Err on '%s'", virshCmd)
 		log.Fatal(err)
 	}
+	log.Printf("%s", out)
 }
 
 func TerminateDomain(domain string) {

@@ -25,6 +25,10 @@ const (
 	DEBUGMODE       = true
 )
 
+// Add a new verion on the first [0]
+func GetAvilableVersions() []string {
+	return []string{"1.17.4", "1.16.2"}
+}
 func GetTempDir() string {
 	return path.Join("/tmp", "microCaaSP")
 }

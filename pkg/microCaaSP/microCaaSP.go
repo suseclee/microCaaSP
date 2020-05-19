@@ -16,23 +16,27 @@ type MicroCaaSP struct {
 	backupDir string
 	url       string
 	files     []string
+	version   string
 }
 
-func (m *MicroCaaSP) Init() {
+func (m *MicroCaaSP) Init(version string) {
 	m.tempDir = constants.GetTempDir()
-	m.backupDir = constants.GetBackupDir()
+	m.backupDir = path.Join(constants.GetBackupDir(), version)
 	m.files = constants.GetDownloadFiles()
 	m.url = constants.URL
+	m.version = version
 }
 func (m *MicroCaaSP) Deploy() {
-	m.Init()
-
 	if tools.MicroCaaSPDomainExist() {
 		log.Fatalf("%s is already deployed", constants.VIRSHDOMAIN)
 	}
 
+	fmt.Println("** This is a TP version and NOT intended for production usage. **")
+	fmt.Println("** MicroCaaSP TP works only under SUSE VPN **")
+	fmt.Println("** Deploying microCaaSP version ", m.version, " **")
+
 	for _, fileName := range m.files {
-		if err := tools.Download(m.backupDir, m.tempDir, m.url, fileName); err != nil {
+		if err := tools.Download(m.backupDir, m.tempDir, m.url, m.version, fileName); err != nil {
 			log.Fatalf("Error on downloading %s: (check your VPN)", fileName)
 		}
 	}
@@ -66,7 +70,7 @@ func (m *MicroCaaSP) Destroy() {
 	tools.TerminatePool(constants.VIRSHPOOL)
 	if _, err := os.Stat(constants.GetTempDir()); !os.IsNotExist(err) {
 		cleanTempDir := []string{"rm", "-r", constants.GetTempDir()}
-		if err := tools.Shell(cleanTempDir, constants.DEBUGMODE); err != nil {
+		if _, err := tools.Shell(cleanTempDir, constants.DEBUGMODE); err != nil {
 			log.Fatalf("Error on cleaning up %s", constants.GetTempDir())
 		}
 	}

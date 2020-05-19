@@ -10,11 +10,10 @@ func newRootCmd() *cobra.Command {
 	cmd := &cobra.Command{}
 
 	cmd.AddCommand(
-		NewCmd(),
+		DeployCmd(),
 		Login(),
 		DestroyCmd(),
 	)
-
 	return cmd
 }
 
