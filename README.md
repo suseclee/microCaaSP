@@ -76,3 +76,5 @@ Flags:
 
 Use " [command] --help" for more information about a command.
 ```
+
+For deployment of microCaaSP, `microCaaSP deploy` will choose the most latest K8s version that CaaSP provides. However, you can choose K8s versions from '--version' flag. The current available versions are 1.18.2, 1.17.4, and 1.16.2.
