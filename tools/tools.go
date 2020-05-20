@@ -108,8 +108,10 @@ func Download(backupDir string, tempDir string, url string, version string, file
 				log.Fatal(e)
 			}
 		} else {
+			CreateImageStorage(tempDir)
 			cp := []string{"cp", backupFilePath, tempDir + "/"}
 			if _, e := Shell(cp, silent); e != nil {
+				RemoveImageStorage(tempDir)
 				log.Fatal(e)
 			}
 		}
